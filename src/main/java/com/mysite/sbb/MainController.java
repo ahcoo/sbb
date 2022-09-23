@@ -21,28 +21,7 @@ import java.util.stream.IntStream;
 @Controller
 public class MainController {
 
-    @Autowired
-    private QuestionRepository questionRepository;
 
-    int increaseNum = -1;
-
-    @GetMapping("/createQuestion")
-    @ResponseBody
-    public List<Question> createQuestion() {
-        Question q1 = new Question();
-        q1.setSubject("sbb가 무엇인가요?");
-        q1.setContent("sbb에 대해서 알고 싶습니다.");
-        q1.setCreateDate(LocalDateTime.now());
-        this.questionRepository.save(q1);  // 첫번째 질문 저장
-
-        Question q2 = new Question();
-        q2.setSubject("스프링부트 모델 질문입니다.");
-        q2.setContent("id는 자동으로 생성되나요?");
-        q2.setCreateDate(LocalDateTime.now());
-        this.questionRepository.save(q2);  // 두번째 질문 저장
-
-        return questionRepository.findAll();
-    }
 
     @RequestMapping("/sbb")
     @ResponseBody //반환할 값을 문자열로 만들어서 보내겠다는 뜻.
@@ -135,6 +114,7 @@ public class MainController {
 //    }
 
 //    int increaseNum;
+int increaseNum = -1;
 
     @GetMapping("/increase")
     @ResponseBody
@@ -315,9 +295,28 @@ public class MainController {
 
  /*  ===================================================================================  */
 
-/* JPA */
 
+@Autowired
+private QuestionRepository questionRepository;
 
+    @GetMapping("/createQuestion")
+    @ResponseBody
+        public List<Question> createQuestion() {
+            Question q1 = new Question();
+            q1.setSubject("sbb가 무엇인가요?");
+            q1.setContent("sbb에 대해서 알고 싶습니다.");
+            q1.setCreateDate(LocalDateTime.now());
+            this.questionRepository.save(q1);  // 첫번째 질문 저장
 
+            Question q2 = new Question();
+            q2.setSubject("스프링부트 모델 질문입니다.");
+            q2.setContent("id는 자동으로 생성되나요?");
+            q2.setCreateDate(LocalDateTime.now());
+            this.questionRepository.save(q2);  // 두번째 질문 저장
+
+            return questionRepository.findAll();
+        }
+     /*  ===================================================================================  */
+                //0922 수업 끝
 }
 
