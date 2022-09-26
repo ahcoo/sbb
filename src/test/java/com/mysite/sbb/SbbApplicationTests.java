@@ -1,5 +1,7 @@
 package com.mysite.sbb;
 
+import com.mysite.sbb.answer.dao.AnswerRepository;
+import com.mysite.sbb.answer.domain.Answer;
 import com.mysite.sbb.question.dao.QuestionRepository;
 import com.mysite.sbb.question.domain.Question;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 //서버를 시작하지 않고 테스트해볼 수 있음.
@@ -21,6 +24,9 @@ class SbbApplicationTests {
 
 	@Autowired
 	private QuestionRepository questionRepository; //변수 만듦
+
+	@Autowired
+	private AnswerRepository answerRepository;
 
 	@Test
 	void contextLoads() {
@@ -85,6 +91,89 @@ class SbbApplicationTests {
 
 		assertEquals(4, questions.size());
 	}
+	/*0923 수업 끝*/
 
+	/*0926 수업*/
+
+	/* Subject와 Content 둘 다 만족하는 값 찾기 */
+	@Test
+	void getQuestionsBySubjectAndContent() {
+		List<Question> questions = questionRepository.findBySubjectAndContent("sbb가 무엇인가요?", "sbb에 대해 알고 싶습니다.");
+		assertEquals(2, questions.size());
+	}
+
+	/* Subject 내용이 뭔가를 포함하는 값 찾기 */
+	@Test
+	void getSubjectAndSomething() {
+		/*
+		* abc% = abc로 시작하는 것
+		* %abc% = abc를 포함하는 것
+		* */
+
+		List<Question> questions = this.questionRepository.findBySubjectLike("sbb%");
+		assertEquals(2, questions.size());
+	}
+
+	/* 질문 수정하기 */
+	@Test
+	void updateQuestion() {
+		Optional<Question> oq = questionRepository.findById(2);
+		if ( oq.isPresent() ) {
+			Question question = oq.get();
+			question.setSubject("수정된 질문");
+			question.setContent("수정된 내용");
+			questionRepository.save(question);
+		}
+	}
+
+	/* 질문 삭제하기 */
+	@Test
+	void deleteQuestion() {
+		assertEquals(4, questionRepository.count());
+		Optional<Question> oq = questionRepository.findById(1);
+		if ( oq.isPresent() ) {
+			Question question = oq.get();
+			questionRepository.delete(question);
+		}
+		assertEquals(3, questionRepository.count());
+	}
+
+	/*답변 만들기*/
+	@Test
+	void createAnswer() {
+		Optional<Question> oq = questionRepository.findById(2);
+		if ( oq.isPresent() ) {
+			Question question = oq.get();
+
+			Answer answer = new Answer();
+			answer.setContent("답변입니다");
+			answer.setQuestion(question);
+			answer.setCreateDate(LocalDateTime.now());
+			answerRepository.save(answer);
+		}
+
+	}
+
+	/*답변 조회하기*/
+	@Test
+	void searchAnswer() {
+		Optional<Answer> oa = answerRepository.findById(1);
+		assertTrue(oa.isPresent());
+		Answer a = oa.get();
+		assertEquals(2, a.getQuestion().getId());
+	}
+
+	@Test
+	void getAnswersByQuestion() {
+		Optional<Question> oq = questionRepository.findById(2);
+		if (oq.isPresent()) {
+			Question question = oq.get();
+			List<Answer> answerList = question.getAnswerList();
+			assertEquals(1, answerList.size());
+		}
+	}
+	//fetchType:Lazyloading → Question.java의 @OneToMany()에 fetch = FetchType.EAGER 추가
+
+	/*0926 수업 끝*/
 
 }
