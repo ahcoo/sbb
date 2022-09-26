@@ -7,6 +7,8 @@ import com.mysite.sbb.question.domain.Question;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -64,7 +66,7 @@ class SbbApplicationTests {
 		Optional<Question> oq = questionRepository.findById(1);
 
 		//oq에 값이 있다면 = oq.isPresent()
-		if ( oq.isPresent() ) {
+		if (oq.isPresent()) {
 			Question q = oq.get();
 			assertEquals("sbb가 무엇인가요?", q.getSubject());
 		}
@@ -93,6 +95,7 @@ class SbbApplicationTests {
 	}
 	/*0923 수업 끝*/
 
+<<<<<<< HEAD
 	/*0926 수업*/
 
 	/* Subject와 Content 둘 다 만족하는 값 찾기 */
@@ -175,5 +178,34 @@ class SbbApplicationTests {
 	//fetchType:Lazyloading → Question.java의 @OneToMany()에 fetch = FetchType.EAGER 추가
 
 	/*0926 수업 끝*/
+=======
+	@Test
+	void getQuestionsByLike() {
+		List<Question> qList = this.questionRepository.findBySubjectLike("sbb%");
+		Question q = qList.get(0);
+		assertEquals("sbb가 무엇인가요?", q.getSubject());
+	}
+>>>>>>> 4926c816653a0a97b799e80cff198b580f9ede8e
 
+	@Test
+	void QuestionEdit() {
+		Optional<Question> oq = this.questionRepository.findById(1);
+		if (oq.isPresent()) {
+			Question q1 = oq.get();
+			q1.setSubject("수정된 제목");
+			this.questionRepository.save(q1);
+		}
+	}
+
+	@Test
+	void deleteQuestions() {
+		//Repository.count()는 해당 리포지터리의 총 데이터건수를 리턴함.
+		assertEquals(2, this.questionRepository.count());
+		Optional<Question> oq = this.questionRepository.findById(1);
+		if (oq.isPresent()) {
+			Question q = oq.get();
+			this.questionRepository.delete(q);
+			assertEquals(1, this.questionRepository.count());
+		}
+	}
 }
