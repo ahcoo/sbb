@@ -14,11 +14,10 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
     List<Question> findAllBySubjectIn(List<String> searchWordList);
 
     List<Question> findBySubjectLike(String subject);
-<<<<<<< HEAD
+
 
 
     List<Question> findBySubjectAndContent(String subject, String content);
-=======
->>>>>>> 4926c816653a0a97b799e80cff198b580f9ede8e
+
 }
 
