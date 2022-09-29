@@ -20,6 +20,7 @@ public class QuestionController {
 
     private final QuestionService questionService;
 
+//0928
     @RequestMapping("/list")
     public String list(Model model) {
 
@@ -28,7 +29,7 @@ public class QuestionController {
         return "question_list";
     }
 
-
+//0929
     @RequestMapping(value = "/detail/{id}")
     public String detail(Model model, @PathVariable("id") Integer id) {
         Question question = questionService.getQuestion(id);
