@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,12 +23,18 @@ public class QuestionService {
     }
     //단건 조회
     public Question getQuestion(Integer id) {
-        Optional<Question> question = this.questionRepository.findById(id);
-        if (question.isPresent()) {
-            return question.get();
-        } else {
-            throw new DataNotFoundException("question not found");
-        }
+
+//        Optional<Question> question = this.questionRepository.findById(id);
+//        if (question.isPresent()) {
+//            return question.get();
+//        } else {
+//            throw new DataNotFoundException("question not found");
+//        }
+
+        /* 위 구문을 아래처럼 짧게 바꿀 수 있음. */
+
+        return questionRepository.findById(id).orElseThrow(()->new DataNotFoundException("question not found"));
+
     }
 
 
