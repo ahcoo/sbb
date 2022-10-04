@@ -6,6 +6,7 @@ import com.mysite.sbb.util.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -38,4 +39,12 @@ public class QuestionService {
     }
 
 
+    //question_form.html에서 작성한 질문을 sql에 등록
+    public void create(String subject, String content) {
+        Question q = new Question();
+        q.setSubject(subject);
+        q.setContent(content);
+        q.setCreateDate(LocalDateTime.now());
+        questionRepository.save(q);
+    }
 }
