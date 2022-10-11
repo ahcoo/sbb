@@ -1,6 +1,7 @@
 package com.mysite.sbb.question.domain;
 
 import com.mysite.sbb.answer.domain.Answer;
+import com.mysite.sbb.siteuser.domain.SiteUser;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,6 +32,9 @@ public class Question {
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Answer> answerList;
 
+    //로그인 되어야 함.
+    @ManyToOne
+    private SiteUser author;
 
 
 }

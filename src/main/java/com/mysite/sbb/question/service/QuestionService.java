@@ -2,6 +2,7 @@ package com.mysite.sbb.question.service;
 
 import com.mysite.sbb.question.dao.QuestionRepository;
 import com.mysite.sbb.question.domain.Question;
+import com.mysite.sbb.siteuser.domain.SiteUser;
 import com.mysite.sbb.util.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -45,11 +46,12 @@ public class QuestionService {
 
 
     //question_form.html에서 작성한 질문을 sql에 등록
-    public void create(String subject, String content) {
+    public void create(String subject, String content, SiteUser user) {
         Question q = new Question();
         q.setSubject(subject);
         q.setContent(content);
         q.setCreateDate(LocalDateTime.now());
+        q.setAuthor(user);
         questionRepository.save(q);
     }
 

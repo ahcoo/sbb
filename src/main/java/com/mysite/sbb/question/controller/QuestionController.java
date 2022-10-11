@@ -4,6 +4,8 @@ import com.mysite.sbb.answer.AnswerForm;
 import com.mysite.sbb.question.QuestionForm;
 import com.mysite.sbb.question.domain.Question;
 import com.mysite.sbb.question.service.QuestionService;
+import com.mysite.sbb.siteuser.domain.SiteUser;
+import com.mysite.sbb.siteuser.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RequestMapping("/question")
 @Controller
@@ -22,6 +25,8 @@ public class QuestionController {
 //    private final QuestionRepository questionRepository;
 
     private final QuestionService questionService;
+
+    private final UserService userService;
 
 //0928
     @RequestMapping("/list")
@@ -46,15 +51,15 @@ public class QuestionController {
     }
 
     @PostMapping("/create")
-    public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult) {
+    public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult, Principal principal) {
         //ToDo질문 저장
 //        System.out.println("subject: "+ subject); //question_form의 id와 같아야 함.
 //        System.out.println("content: "+ content); //question_form의 id와 같아야 함.
         if ( bindingResult.hasErrors() ) {
             return "question_form";
         }
-
-        questionService.create(questionForm.getSubject(), questionForm.getContent());
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser);
 
         return "redirect:/question/list"; //질문 저장 후 질문 목록으로 이동
     }
