@@ -32,7 +32,7 @@ public class Question {
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Answer> answerList;
 
-    //로그인 되어야 함.
+    //여러개의 질문이 한 명의 사용자에게 작성될 수 있으므로 @ManyToOne 관계가 성립한다.
     @ManyToOne
     private SiteUser author;
 

@@ -46,12 +46,13 @@ public class QuestionService {
 
 
     //question_form.html에서 작성한 질문을 sql에 등록
-    public void create(String subject, String content, SiteUser user) {
+    public void create(String subject, String content, SiteUser siteUser) {
         Question q = new Question();
         q.setSubject(subject);
         q.setContent(content);
         q.setCreateDate(LocalDateTime.now());
-        q.setAuthor(user);
+        //먼저 작성자 정보를 저장하기 위해 QuestionService를 다음과 같이 수정
+        q.setAuthor(siteUser);
         questionRepository.save(q);
     }
 

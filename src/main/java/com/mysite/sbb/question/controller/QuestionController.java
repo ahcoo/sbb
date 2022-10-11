@@ -8,6 +8,7 @@ import com.mysite.sbb.siteuser.domain.SiteUser;
 import com.mysite.sbb.siteuser.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -45,6 +46,8 @@ public class QuestionController {
         return "question_detail";
     }
 
+    //주소로 갈때 인증되어있는지 확인
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     public String questionCreate(QuestionForm questionForm) {
         return "question_form";
@@ -63,6 +66,8 @@ public class QuestionController {
 
         return "redirect:/question/list"; //질문 저장 후 질문 목록으로 이동
     }
+
+
 
 }
 
