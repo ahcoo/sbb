@@ -74,7 +74,7 @@ public class QuestionController {
     @GetMapping("/modify/{id}")
     public String questionModify(QuestionForm questionForm, @PathVariable("id") Integer id, @AuthenticationPrincipal SiteUser siteUser) {
         Question question = this.questionService.getQuestion(id);
-        if(!question.getAuthor().getUsername().equals(siteUser.getUsername()) && !(siteUser.getRole().equals("Role_ADMIN"))) {
+        if(!question.getAuthor().getUsername().equals(siteUser.getUsername()) && !(siteUser.getRole().equals("ROLE_ADMIN"))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         questionForm.setSubject(question.getSubject());
@@ -90,7 +90,7 @@ public class QuestionController {
             return "question_form";
         }
         Question question = this.questionService.getQuestion(id);
-        if (!question.getAuthor().getUsername().equals(siteUser.getUsername()) && !(siteUser.getRole().equals("Role_ADMIN"))) {
+        if (!question.getAuthor().getUsername().equals(siteUser.getUsername()) && !(siteUser.getRole().equals("ROLE_ADMIN"))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         this.questionService.modify(question, questionForm.getSubject(), questionForm.getContent());
@@ -101,7 +101,7 @@ public class QuestionController {
     @GetMapping("/delete/{id}")
     public String questionDelete(@AuthenticationPrincipal SiteUser siteUser, @PathVariable("id") Integer id) {
         Question question = this.questionService.getQuestion(id);
-        if (!question.getAuthor().getUsername().equals(siteUser.getUsername()) && !(siteUser.getRole().equals("Role_ADMIN"))) {
+        if (!question.getAuthor().getUsername().equals(siteUser.getUsername()) && !(siteUser.getRole().equals("ROLE_ADMIN"))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         this.questionService.delete(question);
