@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -30,5 +31,9 @@ public class Answer {
 
     @ManyToOne
     private SiteUser author;
+
+    //추천기능
+    @ManyToMany
+    Set<SiteUser> voter; //Set : 중복된 값이 들어갈 수 없음.
 
 }

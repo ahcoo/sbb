@@ -8,11 +8,9 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 
-
-
-/*                                 entity                                 */
 @Entity
 @Getter
 @Setter
@@ -38,5 +36,8 @@ public class Question {
     @ManyToOne
     private SiteUser author;
 
+    //추천기능
+    @ManyToMany
+    Set<SiteUser> voter; //Set : 중복된 값이 들어갈 수 없음.
 
 }

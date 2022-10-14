@@ -36,6 +36,7 @@ public class SiteUser implements UserDetails {
         collect.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
+
                 return getRole();
             }
         });
