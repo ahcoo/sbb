@@ -1,5 +1,6 @@
 package com.mysite.sbb.question.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mysite.sbb.answer.domain.Answer;
 import com.mysite.sbb.siteuser.domain.SiteUser;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class Question {
     private LocalDateTime modifyDate;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Answer> answerList;
 
     //여러개의 질문이 한 명의 사용자에게 작성될 수 있으므로 @ManyToOne 관계가 성립한다.

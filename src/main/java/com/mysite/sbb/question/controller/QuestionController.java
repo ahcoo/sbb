@@ -116,6 +116,9 @@ public class QuestionController {
         this.questionService.vote(question, _siteUser);
         return String.format("redirect:/question/detail/%s", id);
     }
+
+
 }
+
 
 

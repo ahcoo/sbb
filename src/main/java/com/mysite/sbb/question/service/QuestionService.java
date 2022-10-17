@@ -23,9 +23,6 @@ public class QuestionService {
 
     //전체 조회
     public List<Question> getList() {
-
-
-
         return questionRepository.findAll();
     }
     //단건 조회
@@ -76,7 +73,26 @@ public class QuestionService {
     }
 
     public void vote(Question question, SiteUser siteUser) {
-        question.getVoter().add(siteUser);
+        if(question.getVoter().contains(siteUser)) {
+            question.getVoter().remove(siteUser);
+        } else {
+            question.getVoter().add(siteUser);
+        }
         this.questionRepository.save(question);
+
+
+
+
+//        if (questionRepository.findQuestionByVoter(siteUser.getId(), Long.valueOf(question.getId())) == null) {
+//            question.getVoter().add(siteUser);
+//            questionRepository.save(question);
+//        } else {
+//            question.getVoter().remove(siteUser);
+//            questionRepository.deleteQuestionByVoter(siteUser.getId(), Long.valueOf(question.getId()));
+//        }
+
+
+//        question.getVoter().add(siteUser);
+//        this.questionRepository.save(question);
     }
 }
