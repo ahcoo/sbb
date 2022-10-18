@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.security.Principal;
 
 //0929
 @RequestMapping("/answer")
@@ -38,7 +37,7 @@ public class AnswerController {
     @PostMapping("/create/{id}")
     //포스트요청으로 온것만 처리
     //질문, 답변에 글쓴이를 추가한다는 느낌으로 작업을 진행하자. >> Principal principal
-    public String createAnswer(Model model, @PathVariable("id") Integer id, @Valid AnswerForm answerForm, BindingResult bindingResult, Principal principal) {
+    public String createAnswer(Model model, @PathVariable("id") Integer id, @Valid AnswerForm answerForm, BindingResult bindingResult, @AuthenticationPrincipal SiteUser siteUser) {
         Question question = questionService.getQuestion(id);
         if(bindingResult.hasErrors()) {
             model.addAttribute("question", question);
@@ -46,9 +45,15 @@ public class AnswerController {
         }
         //principal.getName()을 호출하면 현재 로그인한 사용자의 사용자명(사용자ID)을 알수 있다.
         //principal 객체를 통해 사용자명을 얻은 후에 사용자명을 통해 SiteUser 객체를 얻어서 답변을 등록하는 AnswerService의 create 메서드에 전달하여 답변을 저장하도록 했다.
-        SiteUser siteUser = userService.getUser(principal.getName());
-        this.answerService.create(question, answerForm.getContent(), siteUser);
-        return String.format("redirect:/question/detail/%s", id);
+//        SiteUser siteUser = userService.getUser(principal.getName());
+//        this.answerService.create(question, answerForm.getContent(), siteUser);
+//        return String.format("redirect:/question/detail/%s", id);
+//        아래로 대체
+
+        Answer answer = this.answerService.create(question,
+                answerForm.getContent(), siteUser);
+        return String.format("redirect:/question/detail/%s#answer_%s",
+                answer.getQuestion().getId(), answer.getId());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -59,7 +64,7 @@ public class AnswerController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         answerForm.setContent(answer.getContent());
-        return "answer_Form";
+        return "answer_form";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -73,7 +78,8 @@ public class AnswerController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         this.answerService.modify(answer, answerForm.getContent());
-        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+        return String.format("redirect:/question/detail/%s#answer_%s",
+                answer.getQuestion().getId(), answer.getId());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -84,7 +90,8 @@ public class AnswerController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         this.answerService.delete(answer);
-        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+        return String.format("redirect:/question/detail/%s#answer_%s",
+                answer.getQuestion().getId(), answer.getId());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -93,6 +100,7 @@ public class AnswerController {
         Answer answer = this.answerService.getAnswer(id);
         SiteUser _siteUser = this.userService.getUser(siteUser.getUsername());
         this.answerService.vote(answer, _siteUser);
-        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+        return String.format("redirect:/question/detail/%s#answer_%s",
+                answer.getQuestion().getId(), answer.getId());
     }
 }
